@@ -38,6 +38,7 @@ parameters = {
 
 
 def formatting(fraze):
+    """Removes typos from questions."""
     formatting_list = [
         ("#039;", "'"),
         ("&'", "'"),
@@ -57,6 +58,7 @@ def formatting(fraze):
 
 
 def formatting_wrong(wrong):
+    """Removes typos from answers."""
     formatting_list = [
         ("#039;", "'"),
         ("&'", "'"),
@@ -73,7 +75,7 @@ def formatting_wrong(wrong):
 
 
 class MainFrame(QMainWindow):
-    """Window with logo and button PLAY"""
+    """Main Window with logo and category buttons"""
     def __init__(self):
         super().__init__()
 
@@ -129,6 +131,7 @@ class MainFrame(QMainWindow):
         self.show()
 
     def create_btn_lvl(self, lvl_name, l_margin, r_margin):
+        """Create category buttons"""
         print(lvl_name)
         self.btn_lvl = QPushButton(lvl_name)
         self.btn_lvl.setCursor(QCursor(QtCore.Qt.PointingHandCursor))
@@ -148,7 +151,7 @@ class MainFrame(QMainWindow):
         return self.btn_lvl
 
     def click_on_play(self, lvl_name):
-        """Open window with question and answers by clicking on button PLAY"""
+        """Open window with question and answers by clicking on category button."""
         if lvl_name == 'MOVIE':
             GameFrame(MOVIE, lvl_name)
         elif lvl_name == 'HISTORY':
@@ -161,7 +164,7 @@ class MainFrame(QMainWindow):
 
 
 class GameFrame(QMainWindow):
-    """Window with question and answers"""
+    """Window with question and answers."""
     def __init__(self, lvl_url, lvl_name):
         super().__init__()
 
@@ -239,6 +242,7 @@ class GameFrame(QMainWindow):
         self.show()
 
     def get_index(self):
+        """Random number for question number."""
         self.index = random.randint(0, 49)
         for _ in parameters['index']:
             if self.index in parameters['index']:
@@ -248,6 +252,7 @@ class GameFrame(QMainWindow):
             print(parameters['index'][-1])
 
     def get_data(self, df):
+        """Calls functions 'formatting' to correct typos."""
         self.get_index()
         parameters['question'].append(formatting(df['question'][parameters['index'][-1]]))
         print("parameters['question']", parameters['question'][-1])
@@ -267,7 +272,7 @@ class GameFrame(QMainWindow):
         parameters['answer4'].append(all_answers[3])
 
     def create_button(self, answer, l_margin, r_margin):
-        """Method create buttons with answers"""
+        """Method create buttons with answers."""
         self.btn = QPushButton(answer)
         self.btn.setCursor(QCursor(QtCore.Qt.PointingHandCursor))
         self.btn.setFixedWidth(500)
@@ -285,14 +290,14 @@ class GameFrame(QMainWindow):
         return self.btn
 
     def click_on_btn(self, lvl_name):
-        """Button click event with response"""
+        """Button click event with response."""
         self.btn1.clicked.connect(lambda x: self.click(self.btn1.text(), lvl_name))
         self.btn2.clicked.connect(lambda x: self.click(self.btn2.text(), lvl_name))
         self.btn3.clicked.connect(lambda x: self.click(self.btn3.text(), lvl_name))
         self.btn4.clicked.connect(lambda x: self.click(self.btn4.text(), lvl_name))
 
     def click(self, text, lvl_name):
-        """The method checks whether the answer is correct or not and open Victory window or Lose window"""
+        """Method checks whether the answer is correct or not and open Victory window or Lose window."""
         if text == parameters['correct'][-1]:
             parameters['score'] += 10
 
@@ -313,7 +318,7 @@ class GameFrame(QMainWindow):
 
 
 class WinFrame(QMainWindow):
-    """Victory window with congratulations"""
+    """Victory window with congratulations and button 'Try again'."""
     def __init__(self, lvl_name):
         super().__init__()
 
@@ -368,6 +373,7 @@ class WinFrame(QMainWindow):
         self.grid.addWidget(self.logo, 4, 0, 1, 2)
 
     def click_try_again(self):
+        """Play once more. Reset results."""
         global parameters
         parameters = {
             'question': [],
@@ -384,7 +390,7 @@ class WinFrame(QMainWindow):
 
 
 class LoseFrame(WinFrame):
-    """Lose window"""
+    """Lose window with score and button 'Try again'."""
     def __init__(self):
         super().__init__(lvl_name=None)
         self.lose_message = QLabel("Sorry, this answer was wrong!\n\n Your score is:")
@@ -407,7 +413,7 @@ class LoseFrame(WinFrame):
 
 
 class NoInternet(QMainWindow):
-    """Window when there is no internet"""
+    """Window when there is no internet."""
     def __init__(self):
         super().__init__()
 
@@ -444,7 +450,7 @@ class NoInternet(QMainWindow):
 
 
 class SplashScreen(QMainWindow, Ui_SplashScreen):
-    """Startup splash screen with loading process"""
+    """Startup splash screen with loading process."""
     def __init__(self):
         super().__init__()
         self.ico = QIcon()
@@ -477,6 +483,7 @@ class SplashScreen(QMainWindow, Ui_SplashScreen):
         self.show()
 
     def progress(self):
+        """Application loading process as a percentage."""
         global counter
         self.progressBar.setValue(counter)  # SET VALUE TO progressBar
         if counter > 100:  # CLOSE SPLASH SCREEN AND OPEN APP
